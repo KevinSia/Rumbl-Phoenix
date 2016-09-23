@@ -3,6 +3,8 @@ defmodule Rumbl.UserController do
   # only alias needed module
   alias Rumbl.User
 
+  plug :authenticate when action in [:index, :show]
+
   def index(conn, _params) do
     users = Repo.all(User)
     render conn, "index.html", users: users
@@ -19,14 +21,27 @@ defmodule Rumbl.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.registration_changeset(%User{}, user_params)
     case Repo.insert(changeset) do
-    {:ok, user} ->
+      {:ok, user} ->
+        conn
+        |> Rumbl.Auth.login(user)
+        |> put_flash(:info, "Welcome to Rumbl, #{user.name}")
+        |> redirect(to: user_path(conn, :index))
+      {:error, changeset} ->
+        render(conn, "new.html", changeset: changeset)
+    end
+  end
+
+  # authenticate function must be in arity 2 for it to be able to plug
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
       conn
-      |> put_flash(:info, "Welcome to Rumbl, #{user.name}")
-      |> redirect(to: user_path(conn, :index))
-    {:error, changeset} ->
-      render(conn, "new.html", changeset: changeset)
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page.")
+      |> redirect(to: page_path(conn, :index))
+      |> halt() # stop any downstream transformations
     end
   end
 end

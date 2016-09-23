@@ -1,4 +1,4 @@
-  defmodule Rumbl.Repo do
+defmodule Rumbl.Repo do
   # connects to the database
   use Ecto.Repo, otp_app: :rumbl
 
