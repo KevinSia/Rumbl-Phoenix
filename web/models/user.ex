@@ -1,4 +1,35 @@
 defmodule Rumbl.User do
-  # Elixir’s main abstraction for working with structured data.
-  defstruct [:id, :name, :username, :password]
+  # struct is Elixir’s main abstraction for working with structured data.
+  # used for stubbing an Ecto repo for chapter 2
+  # defstruct [:id, :name, :username, :password]
+
+  use Rumbl.Web, :model
+
+  # Ecto has a DSL that *specifies the fields in a struct* and the *mapping between those fields and the database tables*.
+  # This DSL is built with Elixir macros.
+  # The schema and field macros let us specify both the underlying database table and the Elixir struct
+  # Each field corresponds to both a field in the database and a field in our local User struct
+  schema "users" do
+    field :name, :string
+    field :username, :string
+    field :password, :string, virtual: true # virtual field are not persisted to the database
+    field :password_hash, :string
+    timestamps
+  end
+  # the above schema is created automatically in Rails.
+  # it is created in such a manual way in Phoenix for the speed improved for not letting the computer to figure out
+  # the schema
+
+  # If no parameters are specified, we can’t just default to an empty map,
+  # because that would be indistinguishable from a blank form submission
+  # Ecto is using changesets as a bucket to hold everything related to a database change, before and after persistence
+  def changeset(model, params \\ :invalid) do
+    model
+    # cast makes sure we provide all necessary required fields
+    # name and username are required, no optional fields
+    # changeset ignores password for now
+    |> cast(params, ~w(name username), [])
+    # validation
+    |> validate_length(:username, min: 1, max: 20)
+  end
 end
