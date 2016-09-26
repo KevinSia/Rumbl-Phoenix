@@ -5,4 +5,4 @@
     <p>Oops, something went wrong! Please check the errors below.</p>
   </div>
 <% end %>
-<%= render "form.html", changeset: @changeset, conn: @conn %>
+<%= render "form.html", changeset: @changeset, path: user_path(@conn, :create) %>

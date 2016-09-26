@@ -39,12 +39,25 @@ defmodule Rumbl.UserController do
     render conn, "edit.html", changeset: changeset
   end
 
-  def update(conn, %{"id" => id}) do
-
+  def update(conn, %{"id" => id, "user" => user_params}) do
+    user = Repo.get(User, id)
+    changeset = case user_params do
+        %{"password" => ""} -> User.changeset(user, user_params)
+        _ -> User.registration_changeset(user, user_params)
+    end
+    case Repo.update(changeset) do
+      {:ok, user} ->
+        conn
+        |> put_flash(:info, "Updated!")
+        |> redirect(to: user_path(conn, :show, user.id))
+      {:error, changeset} ->
+        render conn, "edit.html", changeset: changeset
+    end
   end
 
   defp authorize(conn, _) do
-    if conn.assigns.current_user == Repo.get(User, conn.params["id"]) do
+    current_user = conn.assigns.current_user
+    if current_user && current_user == Repo.get(User, conn.params["id"]) do
       conn
     else
       conn

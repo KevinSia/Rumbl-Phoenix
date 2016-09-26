@@ -1,2 +1,2 @@
 <h1>Edit User</h1>
-<%= render "form.html", changeset: @changeset, conn: @conn %>
+<%= render "form.html", changeset: @changeset, path: user_path(@conn, :update, @conn.params["id"]) %>
