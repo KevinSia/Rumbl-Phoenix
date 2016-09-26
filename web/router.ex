@@ -19,7 +19,7 @@ defmodule Rumbl.Router do
 
     get "/", PageController, :index
 
-    resources "/users", UserController, only: [:index, :show, :new, :create]
+    resources "/users", UserController, except: [:delete]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 

@@ -4,6 +4,7 @@ defmodule Rumbl.UserController do
   alias Rumbl.User
 
   plug :authenticate when action in [:index, :show]
+  plug :authorize when action in [:edit, :update]
 
   def index(conn, _params) do
     users = Repo.all(User)
@@ -30,6 +31,26 @@ defmodule Rumbl.UserController do
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
+    end
+  end
+
+  def edit(conn, %{"id" => id}) do
+    changeset = User.changeset(Repo.get(User, id))
+    render conn, "edit.html", changeset: changeset
+  end
+
+  def update(conn, %{"id" => id}) do
+
+  end
+
+  defp authorize(conn, _) do
+    if conn.assigns.current_user == Repo.get(User, conn.params["id"]) do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You are not authorized to access that page.")
+      |> redirect(to: page_path(conn, :index))
+      |> halt()
     end
   end
 

@@ -1,3 +1,6 @@
 <%= link "Back to index", to: user_path(@conn, :index) %>
 <h1>Showing User Details</h1>
+<div>
+  <%= link "Edit", to: user_path(@conn, :edit, @user.id) %>
+</div>
 <%= render "user.html", user: @user %>
