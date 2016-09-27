@@ -15,6 +15,7 @@ defmodule Rumbl.User do
     field :password, :string, virtual: true # virtual field are not persisted to the database
     field :description, :string, virtual: true
     field :password_hash, :string
+    has_many :videos, Rumbl.Video
     timestamps
   end
   # the above schema is created automatically in Rails.

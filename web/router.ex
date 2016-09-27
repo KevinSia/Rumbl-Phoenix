@@ -7,7 +7,7 @@ defmodule Rumbl.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Rumbl.Auth, repo: Rumbl.Repo
+    plug Rumbl.Auth, repo: Rumbl.Repo # to set up current_user
   end
 
   pipeline :api do
@@ -21,6 +21,16 @@ defmodule Rumbl.Router do
 
     resources "/users", UserController, except: [:delete]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+  end
+
+  scope "/manage", Rumbl do
+    # authenticate_user plug gotten from `router` function in web/web.ex
+    # *all* request that goes to any of the paths below will pass through
+    # authenticate_user plug
+    pipe_through [:browser, :authenticate_user]
+    
+    resources "/videos", VideoController
+
   end
 
   # Other scopes may use custom stacks.

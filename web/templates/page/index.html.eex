@@ -1,5 +1,6 @@
 <div class="jumbotron">
   <h2>Welcome to Rumbl.io!</h2>
   <p class="lead">Rumble out loud.</p>
-  <%= link "See all users", to: user_path(@conn, :index) %>
+  <%= link "See all users", to: user_path(@conn, :index) %> /
+  <%= link "See all videos", to: video_path(@conn, :index) %>
 </div>
