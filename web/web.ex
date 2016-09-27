@@ -60,7 +60,7 @@ defmodule Rumbl.Web do
     quote do
       use Phoenix.Router
 
-      import Rumbl.Auth, only: [authenticate_user: 2] # newly made module
+      import Rumbl.Auth, only: [authenticate_user: 2] # explicitly-made module
     end
   end
 
