@@ -1,4 +1,4 @@
-<h2>Listing video</h2>
+<h2>Listing videos</h2>
 
 <table class="table">
   <thead>
@@ -14,7 +14,7 @@
   <tbody>
 <%= for video <- @videos do %>
     <tr>
-      <td><%= link video.url, to: video.url %></td>
+      <td><%= video.url %></td>
       <td><%= video.title %></td>
       <td><%= video.description %></td>
       <td><%= video.user_id %></td>

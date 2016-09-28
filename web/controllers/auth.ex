@@ -19,8 +19,17 @@ defmodule Rumbl.Auth do
   # getting the value for atom 'user_id' and set current_user atom
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
-    user = user_id && repo.get(Rumbl.User, user_id)
-    assign(conn, :current_user, user)
+    cond do
+      # there is already a current_user
+      user = conn.assigns[:current_user] ->
+        conn
+      # user_id is available and is able to get a user with it
+      user = user_id && repo.get(Rumbl.User, user_id) ->
+        assign(conn, :current_user, user)
+      # otherwise
+      true ->
+        assign(conn, :current_user, nil)
+    end
   end
 
   def login(conn, user) do
@@ -36,7 +45,7 @@ defmodule Rumbl.Auth do
   def logout(conn) do
     # drops the whole session
     configure_session(conn, drop: true)
-    # delete_session(conn, :user_id)
+    # or `delete_session(conn, :user_id)`
   end
 
   def login_by_username_and_pass(conn, username, pass, opts) do
