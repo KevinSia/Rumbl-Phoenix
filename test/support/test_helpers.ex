@@ -7,7 +7,7 @@ defmodule Rumbl.TestHelpers do
         # one byte has 8 bit, which is 0 - 255
         # study about binary in Elixir
         # http://elixir-lang.org/getting-started/binaries-strings-and-char-lists.html
-        username: "user_#{Base.encode16(:crytpo.rand_bytes(8))}",
+        username: "user_#{Base.encode16(:crypto.rand_bytes(8))}",
         password: "supersecret"
       }, attrs)
 
