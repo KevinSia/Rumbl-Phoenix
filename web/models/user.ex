@@ -33,7 +33,13 @@ defmodule Rumbl.User do
     |> cast(params, ~w(name username), [])
     # validation
     |> validate_length(:username, min: 1, max: 20)
+    |> unique_constraint(:username)
   end
+
+  # Each changeset encapsulates the whole change policy!
+  # allowed fields, detecting change, validations, and messaging the user
+
+  # Using changeset constraints only makes sense if the error message can be something the user can take action on.
 
   def registration_changeset(model, params \\ :invalid) do
     model
