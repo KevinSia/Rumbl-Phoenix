@@ -30,7 +30,7 @@ defmodule Rumbl.User do
     # cast makes sure we provide all necessary required fields
     # name and username are required, no optional fields
     # changeset ignores password for now
-    |> cast(params, ~w(name username), [])
+    |> cast(params, ~w(name username), [:description])
     # validation
     |> validate_length(:username, min: 1, max: 20)
     |> unique_constraint(:username)

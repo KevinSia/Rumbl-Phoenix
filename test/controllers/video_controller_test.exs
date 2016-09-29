@@ -42,7 +42,7 @@ defmodule Rumbl.VideoControllerTest do
 
     conn = get conn, video_path(conn, :index)
 
-    assert html_response(conn, 200) =~ ~r/Listing videos/
+    assert html_response(conn, 200) =~ ~r/Listing Videos/
     assert String.contains?(conn.resp_body, user_video.title)
     refute String.contains?(conn.resp_body, other_video.title)
   end
