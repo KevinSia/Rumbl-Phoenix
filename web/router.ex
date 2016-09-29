@@ -18,6 +18,7 @@ defmodule Rumbl.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/watch/:id", WatchController, :show
 
     resources "/users", UserController, except: [:delete]
     resources "/sessions", SessionController, only: [:new, :create, :delete]
@@ -28,8 +29,8 @@ defmodule Rumbl.Router do
     # *all* request that goes to any of the paths below will pass through
     # authenticate_user plug
     pipe_through [:browser, :authenticate_user]
-    
-    resources "/videos", VideoController
+
+    resources "/videos", VideoController, except: [:show]
 
   end
 
