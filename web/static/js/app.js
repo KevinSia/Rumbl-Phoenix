@@ -17,6 +17,14 @@ import Video from "./video"
 
 Video.init(socket, document.getElementById("video"))
 
+//
+// let video = document.getElementById("video")
+//
+// if(video){
+//   Player.init(video.id, video.getAttribute("data-player-id"), () => {
+//     console.log("Player ready!")
+//   })
+// }
 // Import local files
 //
 // Local files can be imported directly using relative

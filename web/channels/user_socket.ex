@@ -1,10 +1,20 @@
 defmodule Rumbl.UserSocket do
+  # gets into this module from
+  # socket "/socket", Rumbl.UserSocket
+  # in lib/rumbl/endpoint.ex
+
+
   use Phoenix.Socket
 
   ## Channels
   # channel "room:*", Rumbl.RoomChannel
+  channel "video:*", Rumbl.VideoChannel
 
-  ## Transports
+  # when client wants to join a channel, they need to provide a topic
+  # "video:*" is an example of a topic
+  # the socket connection is made by javascript in socket.js
+
+  ## Transports: route events into your Socket
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
 
