@@ -24,7 +24,7 @@ defmodule Rumbl.VideoChannel do
     {:noreply, assign(socket, :count, count + 1)}
   end
 
-  # This function will handle all incoming messages (not just Elixir message ) to a channel
+  # This function will handle all incoming messages (not just Elixir messages) to a channel
   # that is pushed directly from remote client
   def handle_in("new_annotation", params, socket) do
     # push this event to all sockets with same topic
