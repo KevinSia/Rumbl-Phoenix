@@ -16,8 +16,7 @@ defmodule Rumbl.VideoChannel do
 
     query = from a in assoc(video, :annotations),
       order_by: [desc: a.at, desc: a.id],
-      limit: 5
-
+      limit: 100
     query = from a in subquery(query), order_by: [asc: a.at, asc: a.id], preload: [:user]
 
     annotations = Repo.all query
