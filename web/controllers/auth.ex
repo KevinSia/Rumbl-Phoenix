@@ -22,10 +22,10 @@ defmodule Rumbl.Auth do
     cond do
       # there is already a current_user
       user = conn.assigns[:current_user] ->
-        conn
+        put_current_user(conn, user)
       # user_id is available and is able to get a user with it
       user = user_id && repo.get(Rumbl.User, user_id) ->
-        assign(conn, :current_user, user)
+        put_current_user(conn, user)
       # otherwise
       true ->
         assign(conn, :current_user, nil)
@@ -35,7 +35,7 @@ defmodule Rumbl.Auth do
   def login(conn, user) do
     conn
     # assign a key-value pair with found user as the value
-    |> assign(:current_user, user)
+    |> put_current_user(user)
     # puts the pair into the request's session
     |> put_session(:user_id, user.id)
     # It tells Plug to send the session cookie back to the client with a different identifier
@@ -76,5 +76,13 @@ defmodule Rumbl.Auth do
       |> redirect(to: Helpers.page_path(conn, :index))
       |> halt() # stop any downstream transformations
     end
+  end
+
+  defp put_current_user(conn, user) do
+    token = Phoenix.Token.sign(conn, "user socket", user.id)
+
+    conn
+    |> assign(:current_user, user)
+    |> assign(:user_token, token)
   end
 end

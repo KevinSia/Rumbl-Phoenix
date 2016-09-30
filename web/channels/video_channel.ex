@@ -28,6 +28,8 @@ defmodule Rumbl.VideoChannel do
   # that is pushed directly from remote client
   def handle_in("new_annotation", params, socket) do
     # push this event to all sockets with same topic
+    # payload must be controlled!
+    # just like strong_params in Rails
     broadcast! socket, "new_annotation", %{
       user: %{username: "Kevin"},
       body: params["body"],
