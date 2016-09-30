@@ -8,6 +8,10 @@ defmodule Rumbl.UserView do
       |> Enum.at(0)
   end
 
+  def render("user.json", %{user: user}) do
+    %{id: user.id, username: user.username}
+  end
+
   # view is the presentation layer of the templates,
   # which will be compiled into functions before runtime!
   # also, templates are built using linked lists, instead of string concatenation (used by most of the websites)

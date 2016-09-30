@@ -44,7 +44,11 @@ let Video = {
 
     // Join the vid channel
     vidChannel.join()
-      .receive("ok", resp => { console.log("Joined the video channel", resp) })
+      .receive("ok", ({annotations}) => {
+        // render annotations once joined channel
+        msgContainer.innerHTML = ""
+        annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
+      })
       .receive("error", reason => { console.log("Unable to join", reason) })
 
   },
