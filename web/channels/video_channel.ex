@@ -15,9 +15,10 @@ defmodule Rumbl.VideoChannel do
     video = Repo.get!(Rumbl.Video, video_id)
 
     query = from a in assoc(video, :annotations),
-      order_by: [desc: a.at, desc: a.id],
-      limit: 100
-    query = from a in subquery(query), order_by: [asc: a.at, asc: a.id], preload: [:user]
+      order_by: [asc: a.at, asc: a.id],
+      limit: 100,
+      preload: [:user]
+    # query = from a in subquery(query), order_by: [asc: a.at, asc: a.id], preload: [:user]
 
     annotations = Repo.all query
     resp = %{annotations: Phoenix.View.render_many(annotations, Rumbl.AnnotationView, "annotation.json")}

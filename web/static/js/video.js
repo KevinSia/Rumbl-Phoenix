@@ -47,7 +47,8 @@ let Video = {
       .receive("ok", ({annotations}) => {
         // render annotations once joined channel
         msgContainer.innerHTML = ""
-        annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
+        this.scheduleMessages(msgContainer, annotations)
+        // annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
       })
       .receive("error", reason => { console.log("Unable to join", reason) })
 
@@ -65,12 +66,41 @@ let Video = {
 
     template.innerHTML = `
       <a href="#" data-seek="${this.esc(at)}">
+        [${this.formatTime(at)}]
         <b>${this.esc(user.username)}</b>: ${this.esc(body)}
       </a>
     `
 
     msgContainer.appendChild(template)
     msgContainer.scrollTop = msgContainer.scrollHeight
+  },
+
+  // check for remaining messages every second
+  scheduleMessages(msgContainer, annotations){
+    setTimeout(() => {
+      let time = Player.getCurrentTime();
+      let remainingMsg = this.renderAtTime(time, msgContainer, annotations)
+      this.scheduleMessages(msgContainer, remainingMsg)
+    }, 1000)
+  },
+
+  renderAtTime(time, msgContainer, annotations){
+    return annotations.filter(ann => {
+      if(ann.at > time){
+        return true
+      }
+      else{
+        this.renderAnnotation(msgContainer, ann)
+        return false
+      }
+    })
+  },
+
+  formatTime(at){
+    let date = new Date(null)
+    if(at === undefined){ at = 0 }
+    date.setSeconds(at / 1000)
+    return date.toISOString().substr(14, 5)
   }
 }
 
