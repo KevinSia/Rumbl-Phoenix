@@ -39,18 +39,27 @@ let Video = {
 
     // setting up server-side event listeners
     vidChannel.on("new_annotation", (resp) => {
+      // resp is an annotation object
+      vidChannel.params.last_seen_id = resp.id
       this.renderAnnotation(msgContainer, resp)
+    })
+
+    // bind event listener to links annotations inside msgContainer
+    msgContainer.addEventListener("click", e => {
+      e.preventDefault()
+      let seconds = e.target.getAttribute("data-seek") ||
+        e.target.parentNode.getAttribute("data-seek") // in case click on text node
+      if(!seconds) { return }
+      // referencing Player from import in line 1?
+      Player.seekTo(seconds)
     })
 
     // Join the vid channel
     vidChannel.join()
-      .receive("ok", ({annotations}) => {
-        // render annotations once joined channel
-        msgContainer.innerHTML = ""
-        this.scheduleMessages(msgContainer, annotations)
-        // annotations.forEach(ann => this.renderAnnotation(msgContainer, ann))
-      })
-      .receive("error", reason => { console.log("Unable to join", reason) })
+    .receive("ok", resp => {
+      this.scheduleMessages(msgContainer, resp.annotations)
+    })
+    .receive("error", reason => console.log("join failed", reason) )
 
   },
 
@@ -98,7 +107,6 @@ let Video = {
 
   formatTime(at){
     let date = new Date(null)
-    if(at === undefined){ at = 0 }
     date.setSeconds(at / 1000)
     return date.toISOString().substr(14, 5)
   }
